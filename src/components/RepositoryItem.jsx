@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 import React from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, Image } from 'react-native';
 import Text from './Text';
 import theme from '../../theme'
 import RepositoryStat from './RepositoryStat';
@@ -42,12 +42,19 @@ import RepositoryStat from './RepositoryStat';
   statItem: {
     alignItems: 'center',
   },
+  avatar: {
+    width: 48,
+    height: 48,
+    borderRadius: 4,
+    marginRight: 15,
+  },
 });
 
 const RepositoryItem = ({ item }) => {
   return (
     <View style={styles.container}>
       <View style={styles.row}>
+        <Image source={{ uri: item.ownerAvatarUrl }} style={styles.avatar} />
         <View style={styles.info}>
           <Text fontWeight="bold" >{item.fullName}</Text>
           <Text >{item.description}</Text>
