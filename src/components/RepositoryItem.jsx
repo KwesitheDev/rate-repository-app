@@ -3,9 +3,10 @@ import React from 'react';
 import { View, StyleSheet } from 'react-native';
 import Text from './Text';
 import theme from '../../theme'
+import RepositoryStat from './RepositoryStat';
 
 
-const styles = StyleSheet.create({
+ export const styles = StyleSheet.create({
   container: {
     padding: 10,
     backgroundColor: theme.colors.white,
@@ -55,22 +56,10 @@ const RepositoryItem = ({ item }) => {
       </View>
 
       <View style={styles.stats}>
-        <View style={styles.statItem}>
-          <Text>{item.stargazersCount}</Text>
-          <Text>Stars</Text>
-        </View>
-        <View style={styles.statItem}>
-          <Text> {item.forksCount}</Text>
-          <Text>Forks</Text>
-        </View>
-        <View style={styles.statItem}>
-          <Text>{item.reviewCount}</Text>
-          <Text>Reviews</Text>
-        </View>
-        <View style={styles.statItem}>
-          <Text>{item.ratingAverage}</Text>
-          <Text>Rating</Text>
-        </View>
+        <RepositoryStat label="Stars" value={item.stargazersCount} />
+        <RepositoryStat label="Forks" value={item.forksCount} />
+        <RepositoryStat label="Reviews" value={item.reviewCount} />
+        <RepositoryStat label="Rating" value={item.ratingAverage} />
       </View>
     </View>
   );
