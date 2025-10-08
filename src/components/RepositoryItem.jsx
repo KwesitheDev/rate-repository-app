@@ -58,7 +58,7 @@ const RepositoryItem = ({ item }) => {
         <View style={styles.info}>
           <Text fontWeight="bold" >{item.fullName}</Text>
           <Text >{item.description}</Text>
-          <Text >{item.language}</Text>
+          <Text style={styles.language}>{item.language}</Text>
         </View>
       </View>
 
