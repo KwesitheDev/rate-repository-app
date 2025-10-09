@@ -35,9 +35,11 @@ const SignIn = () => {
   const validationSchema = yup.object().shape({
     username: yup
     .string()
+    .min(3, 'Username must be at least 3 characters')
     .required('Username is required'),
     password: yup
     .string()
+    .min(6, 'Password must be at least 6 characters')
     .required('Password is required'),
   });
 
@@ -62,6 +64,7 @@ const SignIn = () => {
         value={formik.values.username}
         onChangeText={formik.handleChange('username')}
       />
+      {formik.touched.username && formik.errors.username && <Text style={{ color: 'red' }}>{formik.errors.username}</Text>}
       <TextInput
         style={styles.input}
         placeholder="Password"
@@ -69,6 +72,7 @@ const SignIn = () => {
         value={formik.values.password}
         onChangeText={formik.handleChange('password')}
       />
+      {formik.touched.password && formik.errors.password && <Text style={{ color: 'red' }}>{formik.errors.password}</Text>}
       <Pressable onPress={formik.handleSubmit} style={styles.button}>
     <Text style={styles.buttonText}  >Sign in</Text>
 </Pressable>
