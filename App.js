@@ -6,9 +6,10 @@ import { StatusBar } from 'expo-status-bar';
 import { ApolloProvider } from '@apollo/client/react';
 import createApolloClient from './src/utils/apolloClient';
 
+const client = createApolloClient();
 export default function App() {
 
-  const client = createApolloClient();
+  
   return (
     <>
       <NativeRouter>
