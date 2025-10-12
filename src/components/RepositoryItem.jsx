@@ -6,7 +6,7 @@ import theme from '../../theme'
 import RepositoryStat from './RepositoryStat';
 
 
- export const styles = StyleSheet.create({
+ const styles = StyleSheet.create({
   container: {
     padding: 10,
     backgroundColor: theme.colors.white,
