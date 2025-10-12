@@ -11,7 +11,7 @@ export default defineConfig([
   {
     files: ["**/*.{js,mjs,cjs,jsx}"],
     plugins: { js },
-    extends: ["js/recommended"],
+    extends: ["js/recommended", "eslint:recommended", "plugin:react/recommended", "plugin:jest/recommended"],
     languageOptions: {
       globals: {
         ...globals.browser,
