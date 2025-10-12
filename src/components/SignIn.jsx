@@ -96,4 +96,27 @@ const SignIn = () => {
   )
 };
 
+export const SignInContainer = ({ onSubmit }) => {
+  return (
+    <Formik initialValues={{ username: '', password: '' }} onSubmit={onSubmit}>
+      {({ handleChange, handleSubmit, values }) => (
+        <View>
+          <TextInput
+            placeholder="Username"
+            value={values.username}
+            onChangeText={handleChange('username')}
+          />
+          <TextInput
+            placeholder="Password"
+            secureTextEntry
+            value={values.password}
+            onChangeText={handleChange('password')}
+          />
+          <Button title="Sign in" onPress={handleSubmit} />
+        </View>
+      )}
+    </Formik>
+  );
+};
+
 export default SignIn;
