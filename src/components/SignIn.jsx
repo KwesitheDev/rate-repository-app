@@ -1,7 +1,7 @@
 import React from 'react';
 import Text from './Text';
 import { Pressable, TextInput, View, StyleSheet } from 'react-native';
-import { useFormik } from 'formik';
+import { useFormik, Formik } from 'formik';
 import theme from '../../theme';
 import * as yup from 'yup';
 import useSignIn from '../hooks/useSignIn';
@@ -112,11 +112,14 @@ export const SignInContainer = ({ onSubmit }) => {
             value={values.password}
             onChangeText={handleChange('password')}
           />
-          <Button title="Sign in" onPress={handleSubmit} />
+          <Pressable onPress={handleSubmit}>
+            <Text>Sign in</Text>
+          </Pressable>
         </View>
       )}
     </Formik>
   );
 };
+
 
 export default SignIn;
