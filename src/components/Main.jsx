@@ -6,7 +6,9 @@ import AppBar from './AppBar';
 import { Route, Routes, Navigate } from 'react-router-native';
 import SignIn from './SignIn';
 import SingleRepoView from './SingleRepoView';
+import CreateReview from './CreateReview';
 
+//styles
 const styles = StyleSheet.create({
   container: {
     marginTop: Constants.statusBarHeight,
@@ -24,6 +26,7 @@ const Main = () => {
         <Route path="/signin" element={<SignIn />} />
         <Route path="*" element={<Navigate to="/" replace />} />
         <Route path="/repository/:id" element={<SingleRepoView />} />
+        <Route path="/createReview" element={<CreateReview />} />
       </Routes>
     </View>
   )
