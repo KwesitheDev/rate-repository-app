@@ -4,11 +4,8 @@ import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { useMutation } from '@apollo/client';
 import { useNavigate } from 'react-router-native';
-
-
 import Text from './Text';
 import { CREATE_REVIEW } from '../graphql/mutations';
-
 
 const validationSchema = Yup.object().shape({
   ownerName: Yup.string()
@@ -22,14 +19,17 @@ const validationSchema = Yup.object().shape({
   text: Yup.string().optional(),
 });
 
-//styles
 const styles = StyleSheet.create({
   container: {
     padding: 15,
     backgroundColor: 'white',
   },
   input: {
-    marginBottom: 10,
+    marginBottom: 12,
+    padding: 10,
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 4,
   },
   button: {
     backgroundColor: '#0366d6',
@@ -41,40 +41,58 @@ const styles = StyleSheet.create({
     color: 'white',
     fontWeight: 'bold',
   },
+  errorText: {
+    color: 'red',
+    marginBottom: 10,
+  },
 });
 
-//review form component (refactor later to separate files)
-const ReviewForm = ({ onSubmit }) => {
-  return (
-    <View style={styles.container}>
-      <TextInput
-        name="ownerName"
-        placeholder="Repository owner’s username"
-        style={styles.input}
-      />
-      <TextInput
-        name="repositoryName"
-        placeholder="Repository name"
-        style={styles.input}
-      />
-      <TextInput
-        name="rating"
-        placeholder="Rating between 0 and 100"
-        keyboardType="numeric"
-        style={styles.input}
-      />
-      <TextInput
-        name="text"
-        placeholder="Review"
-        multiline
-        style={styles.input}
-      />
-      <Pressable style={styles.button} onPress={onSubmit}>
-        <Text style={styles.buttonText}>Create a review</Text>
-      </Pressable>
-    </View>
-  );
-};
+const ReviewForm = ({ values, handleChange, handleSubmit, errors, touched }) => (
+  <View style={styles.container}>
+    <TextInput
+      placeholder="Repository owner’s username"
+      style={styles.input}
+      value={values.ownerName}
+      onChangeText={handleChange('ownerName')}
+    />
+    {touched.ownerName && errors.ownerName && (
+      <Text style={styles.errorText}>{errors.ownerName}</Text>
+    )}
+
+    <TextInput
+      placeholder="Repository name"
+      style={styles.input}
+      value={values.repositoryName}
+      onChangeText={handleChange('repositoryName')}
+    />
+    {touched.repositoryName && errors.repositoryName && (
+      <Text style={styles.errorText}>{errors.repositoryName}</Text>
+    )}
+
+    <TextInput
+      placeholder="Rating between 0 and 100"
+      keyboardType="numeric"
+      style={styles.input}
+      value={values.rating}
+      onChangeText={handleChange('rating')}
+    />
+    {touched.rating && errors.rating && (
+      <Text style={styles.errorText}>{errors.rating}</Text>
+    )}
+
+    <TextInput
+      placeholder="Review"
+      multiline
+      style={styles.input}
+      value={values.text}
+      onChangeText={handleChange('text')}
+    />
+
+    <Pressable style={styles.button} onPress={handleSubmit}>
+      <Text style={styles.buttonText}>Create a review</Text>
+    </Pressable>
+  </View>
+);
 
 const CreateReview = () => {
   const [createReview] = useMutation(CREATE_REVIEW);
@@ -88,8 +106,8 @@ const CreateReview = () => {
   };
 
   const onSubmit = async (values) => {
-    const { ownerName, repositoryName, rating, text } = values;
     try {
+      const { ownerName, repositoryName, rating, text } = values;
       const { data } = await createReview({
         variables: {
           review: {
@@ -100,10 +118,13 @@ const CreateReview = () => {
           },
         },
       });
-      const repositoryId = data.createReview.repositoryId;
-      navigate(`/repository/${repositoryId}`);
+      console.log('Review created:', data);
+
+      if (data?.createReview?.repositoryId) {
+        navigate(`/repository/${data.createReview.repositoryId}`);
+      }
     } catch (e) {
-      console.error(e);
+      console.error('Error creating review:', e);
     }
   };
 
@@ -113,7 +134,15 @@ const CreateReview = () => {
       onSubmit={onSubmit}
       validationSchema={validationSchema}
     >
-      {({ handleSubmit }) => <ReviewForm onSubmit={handleSubmit} />}
+      {({ handleSubmit, handleChange, values, errors, touched }) => (
+        <ReviewForm
+          handleSubmit={handleSubmit}
+          handleChange={handleChange}
+          values={values}
+          errors={errors}
+          touched={touched}
+        />
+      )}
     </Formik>
   );
 };
