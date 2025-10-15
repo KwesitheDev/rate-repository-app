@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Pressable, StyleSheet, TextInput } from 'react-native';
-import { Formik } from 'formik';
+import { Formik, useField } from 'formik';
 import * as Yup from 'yup';
 import { useMutation } from '@apollo/client';
 import { useNavigate } from 'react-router-native';
@@ -8,6 +8,7 @@ import theme from '../../theme';
 
 import Text from './Text';
 import { CREATE_USER } from '../graphql/mutations';
+import useSignUp from '../hooks/useSignUp';
 import useSignIn from '../hooks/useSignIn';
 
 
@@ -48,29 +49,56 @@ const styles = StyleSheet.create({
     color: theme.colors.white,
     fontWeight: theme.fontWeights.bold,
   },
+  errorInput: {
+    borderColor:  'red',
+  },
+  errorText: {
+    color:  'red',
+    marginBottom: 10,
+    fontSize: 13,
+  },
 });
+
+
+const FormikTextInput = ({ name, ...props }) => {
+  const [field, meta, helpers] = useField(name);
+  const showError = meta.touched && meta.error;
+
+  return (
+    <View>
+      <TextInput
+        onChangeText={value => helpers.setValue(value)}
+        onBlur={() => helpers.setTouched(true)}
+        value={field.value}
+        style={[
+          styles.input,
+          showError && styles.errorInput
+        ]}
+        {...props}
+      />
+      {showError && <Text style={styles.errorText}>{meta.error}</Text>}
+    </View>
+  );
+};
 
 
 //sign up form component (refactor later to separate files)
 const SignUpForm = ({ onSubmit }) => {
   return (
     <View style={styles.container}>
-      <TextInput
+      <FormikTextInput
         name="username"
         placeholder="Username"
-        style={styles.input}
       />
-      <TextInput
+      <FormikTextInput
         name="password"
         placeholder="Password"
         secureTextEntry
-        style={styles.input}
       />
-      <TextInput
+      <FormikTextInput
         name="passwordConfirmation"
         placeholder="Password confirmation"
         secureTextEntry
-        style={styles.input}
       />
       <Pressable style={styles.button} onPress={onSubmit}>
         <Text style={styles.buttonText}>Sign up</Text>
@@ -79,8 +107,9 @@ const SignUpForm = ({ onSubmit }) => {
   );
 };
 
+
 const SignUp = () => {
-  const [createUser] = useMutation(CREATE_USER);
+  const [signUp] = useSignUp();
   const [signIn] = useSignIn();
   const navigate = useNavigate();
 
@@ -93,11 +122,7 @@ const SignUp = () => {
   const onSubmit = async (values) => {
     const { username, password } = values;
     try {
-      await createUser({
-        variables: {
-          user: { username, password },
-        },
-      });
+      await signUp({ username, password });
 
       await signIn({ username, password });
 
@@ -119,4 +144,6 @@ const SignUp = () => {
 };
 
 export default SignUp;
+
+
 
