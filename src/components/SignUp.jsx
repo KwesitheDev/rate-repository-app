@@ -4,7 +4,7 @@ import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { useMutation } from '@apollo/client';
 import { useNavigate } from 'react-router-native';
-import theme from '../theme';
+import theme from '../../theme';
 
 import Text from './Text';
 import { CREATE_USER } from '../graphql/mutations';
@@ -32,7 +32,11 @@ const styles = StyleSheet.create({
     backgroundColor: theme.colors.white,
   },
   input: {
-    marginBottom: 10,
+     marginBottom: 12,
+    padding: 10,
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 4,
   },
   button: {
     backgroundColor: theme.colors.primary,
