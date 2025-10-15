@@ -4,6 +4,8 @@ import Text from "./Text";
 import { useQuery } from "@apollo/client";
 import { GET_ME } from "../graphql/queries";
 import { useNavigate } from "react-router-native";
+import ReviewActions from "./ReviewActions";
+import ReviewItem from "./ReviewItem";
 
 const styles = StyleSheet.create({
   separator: { height: 10 },
@@ -20,7 +22,7 @@ const styles = StyleSheet.create({
 const ItemSeparator = () => <View style={styles.separator} />;
 
 const MyReviews = () => {
-  const { data, loading, error } = useQuery(GET_ME, {
+  const { data, loading, error, refetch } = useQuery(GET_ME, {
     variables: { includeReviews: true },
     fetchPolicy: "cache-and-network",
   });
@@ -33,20 +35,14 @@ const MyReviews = () => {
   const reviews = data?.me?.reviews?.edges.map(edge => edge.node) || [];
 
   return (
-    <FlatList
+     <FlatList
       data={reviews}
       keyExtractor={(item) => item.id}
-      ItemSeparatorComponent={ItemSeparator}
       renderItem={({ item }) => (
-        <Pressable
-          onPress={() => navigate(`/repository/${item.repository.id}`)}
-          style={styles.reviewContainer}
-        >
-          <Text style={styles.repositoryName}>{item.repository.fullName}</Text>
-          <Text>Rating: {item.rating}</Text>
-          <Text>{item.text}</Text>
-          <Text>{new Date(item.createdAt).toLocaleDateString()}</Text>
-        </Pressable>
+        <View>
+          <ReviewItem review={item} />
+          <ReviewActions review={item} refetchReviews={refetch} />
+        </View>
       )}
     />
   );
