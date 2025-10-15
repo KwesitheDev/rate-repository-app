@@ -5,6 +5,7 @@ import Text from './Text';
 import RepositoryItem from './RepositoryItem';
 import React from 'react';
 import { FlatList } from 'react-native-web';
+import ReviewItem from './ReviewItem';
 const SingleRepoView = () => {
   const { id } = useParams();
   const { data, loading, error } = useQuery(GET_REPOSITORY, {
