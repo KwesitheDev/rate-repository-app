@@ -4,6 +4,7 @@ import { useParams } from 'react-router-native';
 import Text from './Text';
 import RepositoryItem from './RepositoryItem';
 import React from 'react';
+import { FlatList } from 'react-native-web';
 const SingleRepoView = () => {
   const { id } = useParams();
   const { data, loading, error } = useQuery(GET_REPOSITORY, {
@@ -13,10 +14,19 @@ const SingleRepoView = () => {
   if (loading) return <Text>Loading...</Text>;
   if (error) return <Text>Error: {error.message}</Text>;
 
-  const repository = data.repository;
+  const repository = data?.repository;
+  const reviews = repository?.reviews.edges.map(edge => edge.node) || [];
 
   return (
-    <RepositoryItem item={repository} showGithubButton />
+     <FlatList
+      data={reviews}
+      renderItem={({ item }) => <ReviewItem review={item} />}
+      keyExtractor={({ id }) => id}
+      ListHeaderComponent={() => (
+        <RepositoryItem item={repository} showGithubButton />
+      )}
+      ItemSeparatorComponent={ItemSeparator}
+    />
   );
 };
 
