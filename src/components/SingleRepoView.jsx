@@ -4,8 +4,19 @@ import { useParams } from 'react-router-native';
 import Text from './Text';
 import RepositoryItem from './RepositoryItem';
 import React from 'react';
-import { FlatList } from 'react-native-web';
+import { FlatList } from 'react-native';
 import ReviewItem from './ReviewItem';
+import { View, StyleSheet } from 'react-native';
+
+//Item Separator
+const styles = StyleSheet.create({
+  separator: {
+    height: 10,
+  },
+});
+
+const ItemSeparator = () => <View style={styles.separator} />;
+
 const SingleRepoView = () => {
   const { id } = useParams();
   const { data, loading, error } = useQuery(GET_REPOSITORY, {
@@ -16,8 +27,9 @@ const SingleRepoView = () => {
   if (error) return <Text>Error: {error.message}</Text>;
 
   const repository = data?.repository;
-  const reviews = repository?.reviews.edges.map(edge => edge.node) || [];
-
+  const reviews = repository?.reviews
+    ? repository.reviews.edges.map(edge => edge.node)
+    : [];
   return (
      <FlatList
       data={reviews}
