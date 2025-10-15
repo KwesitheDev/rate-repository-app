@@ -1,11 +1,11 @@
 import React from 'react';
-import { View, Pressable, StyleSheet } from 'react-native';
+import { View, Pressable, StyleSheet, TextInput } from 'react-native';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { useMutation } from '@apollo/client';
 import { useNavigate } from 'react-router-native';
 
-import TextInput from './TextInput';
+
 import Text from './Text';
 import { CREATE_REVIEW } from '../graphql/mutations';
 
