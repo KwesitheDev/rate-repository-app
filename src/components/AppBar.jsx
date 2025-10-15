@@ -64,6 +64,11 @@ const AppBar = () => {
             <Text style={styles.tab}>Create a review</Text>
           </Link>
         )}
+        {!user && (
+          <Link to="/signup" underlayColor="transparent">
+            <Text style={styles.tab}>Sign up</Text>
+          </Link>
+        )}
       </ScrollView>
     </View>
   );
