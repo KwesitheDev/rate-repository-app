@@ -3,33 +3,61 @@ import React from 'react';
 import RepositoryItem from './RepositoryItem';
 import useRepositories from '../hooks/useRepositories';
 import {useNavigate} from 'react-router-native';
+import { Picker } from '@react-native-picker/picker';
 
 const styles = StyleSheet.create({
   separator: {
     height: 10,
+  },
+  pickerContainer: {
+    backgroundColor: 'white',
+    padding: 10,
   },
 });
 
 const ItemSeparator = () => <View style={styles.separator} />;
 
 const RepositoryList = () => {
-  const { repositories } = useRepositories();
+  const [selectedOrder, setSelectedOrder] = React.useState('latest');
+  const { repositories } = useRepositories({ orderBy, orderDirection });
   const navigate = useNavigate();
+
+  let orderBy = 'CREATED_AT';
+  let orderDirection = 'DESC';
+
+  if (selectedOrder === 'highest') {
+    orderBy = 'RATING_AVERAGE';
+    orderDirection = 'DESC';
+  } else if (selectedOrder === 'lowest') {
+    orderBy = 'RATING_AVERAGE';
+    orderDirection = 'ASC';
+  }
 
   const repositoryNodes = repositories
     ? repositories.edges.map(edge => edge.node)
     : [];
 
+    const renderHeader = () => (
+    <View style={styles.pickerContainer}>
+      <Picker
+        selectedValue={selectedOrder}
+        onValueChange={(value) => setSelectedOrder(value)}
+      >
+        <Picker.Item label="Latest repositories" value="latest" />
+        <Picker.Item label="Highest rated repositories" value="highest" />
+        <Picker.Item label="Lowest rated repositories" value="lowest" />
+      </Picker>
+    </View>
+  );
+
+
   return (
     <FlatList
       data={repositoryNodes}
-      ItemSeparatorComponent={ItemSeparator}
-      renderItem={({ item }) => 
-      <Pressable onPress={() => navigate(`/repository/${item.id}`)}>
-          <RepositoryItem item={item} />
-        </Pressable>
-        }
+      ItemSeparatorComponent={() => <View style={styles.separator} />}
+      renderItem={({ item }) => <RepositoryItem item={item} />}
       keyExtractor={(item) => item.id}
+      ListHeaderComponent={renderHeader}
     />
   );
 };
