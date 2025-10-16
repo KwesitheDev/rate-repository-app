@@ -26,8 +26,17 @@ const SingleRepoView = () => {
   if (loading) return <Text>Loading...</Text>;
   if (error) return <Text>Error: {error.message}</Text>;
   const onEndReach = () => {
-    fetchMore();
-  }
+    const canFetchMore = !loading && repository?.reviews?.pageInfo?.hasNextPage;
+    if (!canFetchMore) return;
+
+    fetchMore({
+      variables: {
+        after: repository.reviews.pageInfo.endCursor,
+        first: 3,
+        id,
+      },
+    });
+  };
 
   const repository = data?.repository;
   const reviews = repository?.reviews
