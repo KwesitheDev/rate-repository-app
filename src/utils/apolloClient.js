@@ -10,13 +10,19 @@ const { apiUri } = Constants.expoConfig.extra;
 
 const cache = new InMemoryCache({
   typePolicies: {
-    Query: {  
+    Query: {
       fields: {
         repositories: relayStylePagination(),
       },
     },
+    Repository: {
+      fields: {
+        reviews: relayStylePagination(),
+      },
+    },
   },
 });
+
     
 
 const createApolloClient = (authStorage) => {
