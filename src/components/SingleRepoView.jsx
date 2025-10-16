@@ -19,12 +19,15 @@ const ItemSeparator = () => <View style={styles.separator} />;
 
 const SingleRepoView = () => {
   const { id } = useParams();
-  const { data, loading, error } = useQuery(GET_REPOSITORY, {
+  const { data, loading, error, fetchMore } = useQuery(GET_REPOSITORY, {
     variables: { id },
   });
 
   if (loading) return <Text>Loading...</Text>;
   if (error) return <Text>Error: {error.message}</Text>;
+  const onEndReach = () => {
+    fetchMore();
+  }
 
   const repository = data?.repository;
   const reviews = repository?.reviews
@@ -35,6 +38,8 @@ const SingleRepoView = () => {
       data={reviews}
       renderItem={({ item }) => <ReviewItem review={item} />}
       keyExtractor={({ id }) => id}
+      onEndReached={onEndReach}
+      onEndReachedThreshold={0.5}
       ListHeaderComponent={() => (
         <RepositoryItem item={repository} showGithubButton />
       )}
